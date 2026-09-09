@@ -11,13 +11,15 @@ and the condition measures nothing at all.
 """
 from __future__ import annotations
 
+import pathlib
 import random
 import re
+import tempfile
 
 import numpy as np
 
 from stimuli import (PLATE_BLUE, PLATE_DIGITS, PLATE_LETTERS, PROVINCES_INVALID,
-                     PROVINCES_VALID, draw_plate, find_font, plate)
+                     PROVINCES_VALID, build, draw_plate, find_font, plate)
 
 SHAPE = re.compile(r"^(\d{2}) ([A-Z]{1,3}) (\d{2,5})$")
 
@@ -70,6 +72,28 @@ def test_plate_is_drawn_as_a_plate() -> None:
     assert white[2 * third:].sum() > 10 * white[:third].sum(), \
         "TR is not sitting in the lower third of the band"
     assert white[third:2 * third].sum() == 0, "the band is inked across its middle"
+
+
+def test_a_subset_run_is_the_same_experiment() -> None:
+    """Rendering only some conditions must not move the ones it keeps.
+
+    The random stream is shared across conditions, so a subset build that
+    skipped the draws instead of the renders would produce different plates —
+    and a plate-only run could then not be compared to a full one at all.
+    """
+    with tempfile.TemporaryDirectory() as directory:
+        root = pathlib.Path(directory)
+        full = build(root / "full", items=3, difficulties=[0.0, 0.9], seed=13)
+        part = build(root / "part", items=3, difficulties=[0.0, 0.9], seed=13,
+                     conditions=["plate_valid", "plate_invalid"])
+
+        kept = {(s["file"], s["text"]) for s in full["stimuli"]
+                if s["condition"].startswith("plate")}
+        assert kept == {(s["file"], s["text"]) for s in part["stimuli"]}
+        assert len(part["stimuli"]) == len(kept) > 0
+        for name, _ in kept:
+            assert (root / "full" / "images" / name).read_bytes() == \
+                   (root / "part" / "images" / name).read_bytes(), name
 
 
 if __name__ == "__main__":

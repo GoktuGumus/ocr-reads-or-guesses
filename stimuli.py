@@ -77,6 +77,8 @@ PLATE_ASPECT = 520 / 110
 PLATE_BAND = 40 / 520
 PLATE_BLUE = (0, 51, 153)
 
+CONDITIONS = ["word", "perturbed", "pseudo", "random", "plate_valid", "plate_invalid"]
+
 CANVAS = (900, 200)
 BACKGROUND = (238, 238, 234)
 
@@ -244,7 +246,14 @@ def render(text: str, font_path: str, rng: random.Random, difficulty: float,
 
 
 def build(out: pathlib.Path, items: int, difficulties: list[float], seed: int,
-          plate_style: str = "plate") -> dict:
+          plate_style: str = "plate", conditions: list[str] | None = None) -> dict:
+    """Build the stimulus set. `conditions` renders a subset of them.
+
+    Every string is still drawn for every item even when only some are kept, so
+    the random stream — and therefore the images that *are* kept — is identical
+    to a full build. That is what makes a subset run comparable to a full one
+    instead of a separate experiment.
+    """
     font_path = find_font()
     rng = random.Random(seed)
     out.mkdir(parents=True, exist_ok=True)
@@ -266,6 +275,8 @@ def build(out: pathlib.Path, items: int, difficulties: list[float], seed: int,
             # One seed per (item, difficulty): every condition in this cell gets
             # exactly the same rotation, blur, contrast and noise.
             for condition, text in variants.items():
+                if conditions and condition not in conditions:
+                    continue
                 cell_seed = hash((seed, index, difficulty)) & 0xFFFFFFF
                 image = render(text, font_path, random.Random(cell_seed), difficulty,
                                as_plate=plate_style == "plate" and condition.startswith("plate"))
@@ -280,6 +291,7 @@ def build(out: pathlib.Path, items: int, difficulties: list[float], seed: int,
 
     manifest = {"seed": seed, "items": items, "difficulties": difficulties,
                 "font": font_path, "plate_style": plate_style,
+                "conditions": conditions or CONDITIONS,
                 "count": len(stimuli), "stimuli": stimuli}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False))
     return manifest
@@ -294,11 +306,13 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=13)
     parser.add_argument("--plate-style", choices=["plate", "text"], default="plate",
                         help="draw plate conditions inside a plate, or as bare text")
+    parser.add_argument("--conditions", nargs="+", choices=CONDITIONS,
+                        help="render only these; the others are still drawn and discarded")
     args = parser.parse_args()
 
     manifest = build(pathlib.Path(args.out), args.items, args.difficulties, args.seed,
-                     args.plate_style)
+                     args.plate_style, args.conditions)
     print(f"{manifest['count']} images across {len(manifest['difficulties'])} difficulties")
-    for condition in ("word", "perturbed", "pseudo", "random", "plate_valid", "plate_invalid"):
+    for condition in manifest["conditions"]:
         sample = next(s for s in manifest["stimuli"] if s["condition"] == condition)
         print(f"  {condition:<14} e.g. {sample['text']}")

@@ -36,9 +36,9 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from stimuli import (BLOCKED, PROVINCES_INVALID, PROVINCES_VALID, SWAPS, WORDS,
-                     draw_plate, find_font, perturb, plate, pseudo_word,
-                     random_string)
+from stimuli import (BLOCKED, CONDITIONS, PROVINCES_INVALID, PROVINCES_VALID,
+                     SWAPS, WORDS, draw_plate, find_font, perturb, plate,
+                     pseudo_word, random_string)
 
 # A4 at 150 dpi. Print scaling must be 100%: the marker separation is the ruler
 # that `extract.py` measures everything else against.
@@ -51,7 +51,6 @@ PAGE = (int(8.27 * DPI), int(11.69 * DPI))
 MARKER_PX = int(1.10 * DPI)
 MARGIN = int(0.39 * DPI)                    # 10 mm
 
-CONDITIONS = ["word", "perturbed", "pseudo", "random", "plate_valid", "plate_invalid"]
 ROWS, COLUMNS = 6, 2                        # 12 cells: two items × six conditions
 
 
