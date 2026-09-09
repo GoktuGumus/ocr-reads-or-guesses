@@ -80,6 +80,7 @@ PLATE_BLUE = (0, 51, 153)
 CONDITIONS = ["word", "perturbed", "pseudo", "random", "plate_valid", "plate_invalid"]
 
 CANVAS = (900, 200)
+TEXT_POINTS = 64
 BACKGROUND = (238, 238, 234)
 
 FONT_CANDIDATES = [
@@ -141,7 +142,7 @@ def plate(rng: random.Random, valid: bool) -> str:
 
 
 def draw_plate(text: str, font_path: str, size: tuple[int, int],
-               background=BACKGROUND) -> Image.Image:
+               background=BACKGROUND, points: int = TEXT_POINTS) -> Image.Image:
     """Draw `text` inside a Turkish plate rather than on a bare field.
 
     The plate conditions test a *structural* prior — that 99 is not a province,
@@ -149,13 +150,32 @@ def draw_plate(text: str, font_path: str, size: tuple[int, int],
     the model knows what it is looking at, and a string on a grey background does
     not say "plate". The frame, the proportions and the blue TR band are what put
     the reader into the regime this condition means to measure.
+
+    The glyphs are set at the same point size as every other condition and the
+    plate is built around them, not the other way round. Sizing the plate to the
+    canvas and shrinking the text to fit — the obvious order — made plate glyphs
+    1.6x taller than word glyphs, which would have handed the plate conditions an
+    advantage that had nothing to do with priors and everything to do with having
+    more pixels per character.
     """
     width, height = size
     canvas = Image.new("RGB", size, background)
     draw = ImageDraw.Draw(canvas)
 
-    plate_w = min(int(width * 0.94), int(height * 0.86 * PLATE_ASPECT))
+    font = ImageFont.truetype(font_path, points)
+    box = draw.textbbox((0, 0), text, font=font)
+    text_w, text_h = box[2] - box[0], box[3] - box[1]
+
+    # Text occupies 78% of the plate's width; the rest is the band and padding.
+    plate_w = int(text_w / 0.78)
     plate_h = int(plate_w / PLATE_ASPECT)
+    if plate_h < text_h / 0.62:                  # short string: the frame leads
+        plate_h = int(text_h / 0.62)
+        plate_w = int(plate_h * PLATE_ASPECT)
+    if plate_w > width * 0.96:                   # only if the canvas is too small
+        scale = width * 0.96 / plate_w
+        return draw_plate(text, font_path, size, background, max(6, int(points * scale)))
+
     x0, y0 = (width - plate_w) // 2, (height - plate_h) // 2
     radius = max(2, plate_h // 12)
 
@@ -177,23 +197,15 @@ def draw_plate(text: str, font_path: str, size: tuple[int, int],
 
     # TR sits in the lower third of the band, centred within that third.
     band_font = ImageFont.truetype(font_path, max(7, int(plate_h * 0.20)))
-    box = draw.textbbox((0, 0), "TR", font=band_font)
+    tr = draw.textbbox((0, 0), "TR", font=band_font)
     third = plate_h / 3
-    draw.text((x0 + (band_w - (box[2] - box[0])) // 2,
-               y0 + 2 * third + (third - (box[3] - box[1])) / 2 - box[1]),
+    draw.text((x0 + (band_w - (tr[2] - tr[0])) // 2,
+               y0 + 2 * third + (third - (tr[3] - tr[1])) / 2 - tr[1]),
               "TR", font=band_font, fill=(255, 255, 255))
 
-    # Shrink to fit: plates run from 7 to 9 characters and the widest must still
-    # sit inside the same frame.
-    inner_x = x0 + band_w + int(plate_w * 0.035)
-    inner_w = x0 + plate_w - inner_x - int(plate_w * 0.035)
-    for points in range(int(plate_h * 0.62), 6, -2):
-        font = ImageFont.truetype(font_path, points)
-        box = draw.textbbox((0, 0), text, font=font)
-        if box[2] - box[0] <= inner_w:
-            break
-    draw.text((inner_x + (inner_w - (box[2] - box[0])) // 2,
-               y0 + (plate_h - (box[3] - box[1])) // 2 - box[1]),
+    inner_x, inner_w = x0 + band_w, plate_w - band_w
+    draw.text((inner_x + (inner_w - text_w) // 2 - box[0],
+               y0 + (plate_h - text_h) // 2 - box[1]),
               text, font=font, fill=(12, 12, 12))
     return canvas
 
@@ -214,7 +226,7 @@ def render(text: str, font_path: str, rng: random.Random, difficulty: float,
     if as_plate:
         canvas = draw_plate(text, font_path, CANVAS)
     else:
-        font = ImageFont.truetype(font_path, 64)
+        font = ImageFont.truetype(font_path, TEXT_POINTS)
         canvas = Image.new("RGB", CANVAS, BACKGROUND)
         draw = ImageDraw.Draw(canvas)
         box = draw.textbbox((0, 0), text, font=font)

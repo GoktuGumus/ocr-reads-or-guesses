@@ -52,6 +52,15 @@ Five degradation levels, from clean to barely legible. Degradation is applied by
 downscaling and scaling back before blur and noise, because real OCR difficulty
 is mostly small or distant text, and blur alone on a large glyph barely registers.
 
+![difficulty ladder](docs/difficulty-ladder.png)
+
+Every condition is set at the same point size, so the same difficulty means the
+same pixels per character whatever the characters spell. That is the control the
+whole benchmark rests on, and `test_stimuli.py` asserts it: a first draft of the
+plate rendering sized the frame to the canvas and shrank the text to fit, which
+made plate glyphs 1.6x taller than word glyphs. The plate conditions would have
+scored better for having more resolution, and it would have read as a prior.
+
 ## What it measures
 
 Beyond exact match and CER, four things that separate *how* a reader fails:
