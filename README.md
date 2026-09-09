@@ -33,8 +33,20 @@ only the linguistic plausibility of the string varies:
 | `perturbed` | KAVBAK | one glyph off a real word — the prior is *wrong* |
 | `pseudo` | SÖBETÜ | Turkish phonotactics, not a word |
 | `random` | XQKZMR | none |
-| `plate_valid` | 34 EYA 382 | valid Turkish plate format |
-| `plate_invalid` | 99 AJE 186 | invalid province code — structural prior is wrong |
+| `plate_valid` | 34 ABC 123 | valid Turkish plate format |
+| `plate_invalid` | 99 ABC 123 | invalid province code — structural prior is wrong |
+
+The plate conditions are drawn as plates, not as text on a field:
+
+![plate stimulus](docs/plate-stimulus.png)
+
+That is not decoration. A structural prior — *99 is not a province, three letters
+are never followed by five digits* — can only fire if the reader knows it is
+looking at a plate, and a bare string does not say so. Letter and digit counts
+are drawn from the real layout table (`99 X 9999`, `99 XX 999`, `99 XXX 99`, and
+so on up to nine characters), and both arms span every layout, so the province is
+the only thing separating a valid plate from an invalid one. `--plate-style text`
+renders them bare, which turns the frame itself into a second axis.
 
 Five degradation levels, from clean to barely legible. Degradation is applied by
 downscaling and scaling back before blur and noise, because real OCR difficulty
@@ -57,8 +69,8 @@ parsing is an answer that can be parsed wrongly.
 ## Results
 
 *Preliminary run: 50 items × 6 conditions × 6 degradation levels = 1,800 images
-per configuration. A 200-item run is in progress; these numbers will be replaced
-by it.*
+per configuration, with plates rendered as bare text. A 200-item run with plates
+drawn as plates is in progress; these numbers will be replaced by it.*
 
 ![prompt effect](docs/prompt-effect.png)
 
@@ -133,11 +145,12 @@ For an annotation pipeline that uses a VLM as an OCR engine:
 ```bash
 pip install -r requirements.txt
 
-python stimuli.py --items 200 --out stimuli
+python stimuli.py --items 200 --out stimuli          # --plate-style text for bare plates
 python run.py --reader easyocr --out predictions/easyocr.json
 python run.py --reader qwen-vl --prompt strict --out predictions/qwen-strict.json
 python score.py predictions/*.json --json report.json
 python chart.py --report report.json
+python test_stimuli.py                              # the generator's own checks
 ```
 
 Stimulus generation needs nothing but Pillow and NumPy. Each reader pulls its own

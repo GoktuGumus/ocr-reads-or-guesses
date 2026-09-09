@@ -37,7 +37,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 from stimuli import (BLOCKED, PROVINCES_INVALID, PROVINCES_VALID, SWAPS, WORDS,
-                     find_font, perturb, plate, pseudo_word, random_string)
+                     draw_plate, find_font, perturb, plate, pseudo_word,
+                     random_string)
 
 # A4 at 150 dpi. Print scaling must be 100%: the marker separation is the ruler
 # that `extract.py` measures everything else against.
@@ -103,10 +104,16 @@ def build_sheet(index: int, rng: random.Random, font_path: str) -> tuple[Image.I
 
     cells = []
     for (condition, text, source), (x, y, width, height) in zip(variants, cell_boxes()):
-        box = draw.textbbox((0, 0), text, font=font)
-        draw.text((x + (width - (box[2] - box[0])) // 2,
-                   y + (height - (box[3] - box[1])) // 2 - box[1]),
-                  text, font=font, fill=(15, 15, 15))
+        if condition.startswith("plate"):
+            # Printed as a plate, for the same reason the synthetic half renders
+            # one: the structural prior cannot fire on a string that does not
+            # look like a plate, and this condition exists to make it fire.
+            canvas.paste(draw_plate(text, font_path, (width, height), "white"), (x, y))
+        else:
+            box = draw.textbbox((0, 0), text, font=font)
+            draw.text((x + (width - (box[2] - box[0])) // 2,
+                       y + (height - (box[3] - box[1])) // 2 - box[1]),
+                      text, font=font, fill=(15, 15, 15))
         # A hairline frame gives the extractor a visual check and the reader
         # nothing: it never touches the glyphs.
         draw.rectangle([x + 4, y + 4, x + width - 4, y + height - 4],
