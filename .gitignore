@@ -1,6 +1,12 @@
 __pycache__/
 *.pyc
 stimuli/
+stimuli_plate/
 predictions/
+predictions_plate/
+sheets/
+photos/
+real/
 logs_*.txt
 DONE
+DONE_PLATE

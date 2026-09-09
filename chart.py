@@ -18,13 +18,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 SURFACE, INK, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
-# Each series carries a dash pattern as well as a hue. Two reasons: the strict
-# and neutral curves sit on top of each other for most of the range, and a hue
-# alone would hide one behind the other; and identity that survives a colourblind
-# reader should not rest on colour.
-SERIES = [("strict", "strict — transcribe exactly", "#2a78d6", "solid"),
-          ("neutral", "neutral — what text is this?", "#eb6834", (0, (5, 2))),
-          ("primed", "primed — it's a Turkish sign", "#1baf7a", (0, (1, 1.6)))]
+# Hue carries model size and dash carries the prompt, so the two effects can be
+# read off separately: the warm curves are the bigger model, the broken curves
+# are the primed prompt, and both of them lift the repair rate.
+SERIES = [("3B-Instruct:strict", "3B strict", "#2a78d6", "solid"),
+          ("3B-Instruct:primed", "3B primed", "#2a78d6", (0, (1, 1.6))),
+          ("7B-Instruct:strict", "7B strict", "#d1521f", "solid"),
+          ("7B-Instruct:primed", "7B primed", "#d1521f", (0, (1, 1.6)))]
 
 
 def pick(report: dict, needle: str) -> dict | None:
@@ -63,7 +63,7 @@ def draw(report: dict, out: pathlib.Path, model_label: str) -> None:
             axis.plot(x, y, color=colour, linewidth=2, marker="o", markersize=8,
                       linestyle=dash, markeredgecolor=SURFACE, markeredgewidth=2,
                       label=label_text, clip_on=False, zorder=3)
-            endpoints.append([y[-1], x[-1], key])
+            endpoints.append([y[-1], x[-1], label_text])
 
         # Curves that finish at the same value would stack their labels on top of
         # each other; push them apart in the order they end.
@@ -73,8 +73,8 @@ def draw(report: dict, out: pathlib.Path, model_label: str) -> None:
             gap = endpoints[index][0] - endpoints[index - 1][0]
             if gap < span * 0.07:
                 endpoints[index][0] = endpoints[index - 1][0] + span * 0.07
-        for label_y, label_x, key in endpoints:
-            axis.annotate(key, xy=(label_x, label_y), xytext=(7, 0),
+        for label_y, label_x, name in endpoints:
+            axis.annotate(name, xy=(label_x, label_y), xytext=(7, 0),
                           textcoords="offset points", color=MUTED, fontsize=9,
                           va="center", zorder=4)
 
@@ -87,7 +87,7 @@ def draw(report: dict, out: pathlib.Path, model_label: str) -> None:
 
         axis.set_ylabel(label, color=MUTED, fontsize=9)
         axis.yaxis.set_major_formatter(lambda v, _: f"{v:.0%}")
-        axis.set_xlim(-0.03, 1.12)
+        axis.set_xlim(-0.03, 1.18)
 
     axes[0].set_title("the reader returns the word it expected", color=INK,
                       fontsize=11, loc="left", pad=10)
@@ -95,8 +95,7 @@ def draw(report: dict, out: pathlib.Path, model_label: str) -> None:
                       fontsize=11, loc="left", pad=10)
     axes[1].legend(frameon=False, labelcolor=MUTED, fontsize=8.5, loc="lower left")
 
-    figure.suptitle(f"One model, three prompts: {model_label}", color=INK, fontsize=13,
-                    x=0.006, ha="left", y=1.01)
+    figure.suptitle(model_label, color=INK, fontsize=13, x=0.006, ha="left", y=1.01)
     figure.tight_layout()
     figure.savefig(out, dpi=160, facecolor=SURFACE, bbox_inches="tight")
     print(f"wrote {out}")
@@ -106,11 +105,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--report", default="report.json")
     parser.add_argument("--out", default="docs/prompt-effect.png")
-    parser.add_argument("--label", default="Qwen2.5-VL-3B")
-    parser.add_argument("--filter", default="3B", help="only readers whose name contains this")
+    parser.add_argument("--label",
+                        default="Prior-pull rises with model size and with priming")
     args = parser.parse_args()
 
     report = json.loads(pathlib.Path(args.report).read_text())
-    subset = {k: v for k, v in report.items() if args.filter in k or "easyocr" in k}
     pathlib.Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    draw(subset, pathlib.Path(args.out), args.label)
+    draw(report, pathlib.Path(args.out), args.label)

@@ -1,0 +1,692 @@
+{
+  "easyocr": {
+    "family": "ctc",
+    "overall": {
+      "exact": 0.5673,
+      "cer": 0.1527,
+      "format_ok": 0.9998,
+      "band_read": 0.0,
+      "diacritic_loss": 0.1362,
+      "turkified": 0.0097,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.599,
+        "cer": 0.1542,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.217,
+        "turkified": 0.016,
+        "plausible_error": 0.0,
+        "empty": 0.041,
+        "repair": 0.0
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.692,
+        "cer": 0.1069,
+        "format_ok": 0.999,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.013,
+        "plate_repair": 0.007
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.719,
+        "cer": 0.1224,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.035
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.451,
+        "cer": 0.1768,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.344,
+        "turkified": 0.016,
+        "plausible_error": 0.0,
+        "empty": 0.012
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.391,
+        "cer": 0.1683,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.008,
+        "plausible_error": 0.0,
+        "empty": 0.011
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.552,
+        "cer": 0.1876,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.256,
+        "turkified": 0.018,
+        "plausible_error": 0.0,
+        "empty": 0.046
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.9083,
+        "cer": 0.0192,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.7925,
+        "cer": 0.041,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.6042,
+        "cer": 0.0913,
+        "repair": 0.0,
+        "turkified": 0.0142
+      },
+      "0.95": {
+        "exact": 0.435,
+        "cer": 0.1391,
+        "repair": 0.0,
+        "turkified": 0.0292
+      },
+      "1.0": {
+        "exact": 0.0967,
+        "cer": 0.4729,
+        "repair": 0.0,
+        "turkified": 0.005
+      }
+    },
+    "n": 6000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:neutral": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.7163,
+      "cer": 0.074,
+      "format_ok": 0.589,
+      "band_read": 0.0,
+      "diacritic_loss": 0.1088,
+      "turkified": 0.0105,
+      "plausible_error": 0.0005
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.697,
+        "cer": 0.0752,
+        "format_ok": 0.671,
+        "band_read": 0.0,
+        "diacritic_loss": 0.172,
+        "turkified": 0.029,
+        "plausible_error": 0.003,
+        "empty": 0.0,
+        "repair": 0.003
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.77,
+        "cer": 0.0592,
+        "format_ok": 0.408,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.001
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.746,
+        "cer": 0.0732,
+        "format_ok": 0.393,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.59,
+        "cer": 0.1072,
+        "format_ok": 0.729,
+        "band_read": 0.0,
+        "diacritic_loss": 0.243,
+        "turkified": 0.025,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.804,
+        "cer": 0.0565,
+        "format_ok": 0.771,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.006,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.691,
+        "cer": 0.073,
+        "format_ok": 0.562,
+        "band_read": 0.0,
+        "diacritic_loss": 0.238,
+        "turkified": 0.003,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.94,
+        "cer": 0.0113,
+        "repair": 0.0,
+        "turkified": 0.0083
+      },
+      "0.75": {
+        "exact": 0.8625,
+        "cer": 0.0393,
+        "repair": 0.0,
+        "turkified": 0.015
+      },
+      "0.9": {
+        "exact": 0.7425,
+        "cer": 0.0677,
+        "repair": 0.005,
+        "turkified": 0.0117
+      },
+      "0.95": {
+        "exact": 0.6842,
+        "cer": 0.0764,
+        "repair": 0.0,
+        "turkified": 0.0092
+      },
+      "1.0": {
+        "exact": 0.3525,
+        "cer": 0.1754,
+        "repair": 0.01,
+        "turkified": 0.0083
+      }
+    },
+    "n": 6000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.5893,
+      "cer": 0.1859,
+      "format_ok": 0.9998,
+      "band_read": 0.0,
+      "diacritic_loss": 0.0843,
+      "turkified": 0.0203,
+      "plausible_error": 0.0067
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.737,
+        "cer": 0.0662,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.128,
+        "turkified": 0.024,
+        "plausible_error": 0.035,
+        "empty": 0.0,
+        "repair": 0.034
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.328,
+        "cer": 0.4064,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.001,
+        "empty": 0.0,
+        "plate_repair": 0.001
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.347,
+        "cer": 0.3961,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.588,
+        "cer": 0.1068,
+        "format_ok": 0.999,
+        "band_read": 0.0,
+        "diacritic_loss": 0.205,
+        "turkified": 0.082,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.757,
+        "cer": 0.0865,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.016,
+        "plausible_error": 0.004,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.779,
+        "cer": 0.0531,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.173,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.6425,
+        "cer": 0.2236,
+        "repair": 0.005,
+        "turkified": 0.0125
+      },
+      "0.75": {
+        "exact": 0.7158,
+        "cer": 0.1632,
+        "repair": 0.0,
+        "turkified": 0.025
+      },
+      "0.9": {
+        "exact": 0.6742,
+        "cer": 0.1465,
+        "repair": 0.035,
+        "turkified": 0.0275
+      },
+      "0.95": {
+        "exact": 0.6075,
+        "cer": 0.1512,
+        "repair": 0.03,
+        "turkified": 0.0217
+      },
+      "1.0": {
+        "exact": 0.3067,
+        "cer": 0.2447,
+        "repair": 0.1,
+        "turkified": 0.015
+      }
+    },
+    "n": 6000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.7685,
+      "cer": 0.0565,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.1012,
+      "turkified": 0.0067,
+      "plausible_error": 0.0003
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.721,
+        "cer": 0.0711,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.157,
+        "turkified": 0.02,
+        "plausible_error": 0.002,
+        "empty": 0.0,
+        "repair": 0.002
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.871,
+        "cer": 0.0209,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.001
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.867,
+        "cer": 0.0206,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.608,
+        "cer": 0.1035,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.243,
+        "turkified": 0.019,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.814,
+        "cer": 0.0552,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.001,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.73,
+        "cer": 0.0675,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.207,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.96,
+        "cer": 0.008,
+        "repair": 0.0,
+        "turkified": 0.0067
+      },
+      "0.75": {
+        "exact": 0.9417,
+        "cer": 0.0117,
+        "repair": 0.0,
+        "turkified": 0.0125
+      },
+      "0.9": {
+        "exact": 0.82,
+        "cer": 0.0407,
+        "repair": 0.0,
+        "turkified": 0.0058
+      },
+      "0.95": {
+        "exact": 0.74,
+        "cer": 0.0578,
+        "repair": 0.0,
+        "turkified": 0.0067
+      },
+      "1.0": {
+        "exact": 0.3808,
+        "cer": 0.1641,
+        "repair": 0.01,
+        "turkified": 0.0017
+      }
+    },
+    "n": 6000
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.4955,
+      "cer": 0.2937,
+      "format_ok": 0.9998,
+      "band_read": 0.0,
+      "diacritic_loss": 0.043,
+      "turkified": 0.0323,
+      "plausible_error": 0.0128
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.763,
+        "cer": 0.0617,
+        "format_ok": 0.999,
+        "band_read": 0.0,
+        "diacritic_loss": 0.067,
+        "turkified": 0.023,
+        "plausible_error": 0.071,
+        "empty": 0.0,
+        "repair": 0.071
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.0,
+        "cer": 0.7093,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.002,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.001,
+        "cer": 0.7106,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.002,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.596,
+        "cer": 0.1083,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.118,
+        "turkified": 0.149,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.714,
+        "cer": 0.1435,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.022,
+        "plausible_error": 0.002,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.899,
+        "cer": 0.0289,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.073,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.615,
+        "cer": 0.2437,
+        "repair": 0.045,
+        "turkified": 0.0317
+      },
+      "0.75": {
+        "exact": 0.5933,
+        "cer": 0.2511,
+        "repair": 0.065,
+        "turkified": 0.035
+      },
+      "0.9": {
+        "exact": 0.5233,
+        "cer": 0.2718,
+        "repair": 0.08,
+        "turkified": 0.0358
+      },
+      "0.95": {
+        "exact": 0.4608,
+        "cer": 0.3005,
+        "repair": 0.07,
+        "turkified": 0.04
+      },
+      "1.0": {
+        "exact": 0.285,
+        "cer": 0.4015,
+        "repair": 0.095,
+        "turkified": 0.0192
+      }
+    },
+    "n": 6000
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.8387,
+      "cer": 0.0371,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.0662,
+      "turkified": 0.0078,
+      "plausible_error": 0.002
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 1000,
+        "exact": 0.805,
+        "cer": 0.0463,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.112,
+        "turkified": 0.014,
+        "plausible_error": 0.012,
+        "empty": 0.0,
+        "repair": 0.012
+      },
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.929,
+        "cer": 0.0105,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.898,
+        "cer": 0.0142,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 1000,
+        "exact": 0.699,
+        "cer": 0.0738,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.175,
+        "turkified": 0.032,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 1000,
+        "exact": 0.868,
+        "cer": 0.0355,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 1000,
+        "exact": 0.833,
+        "cer": 0.0423,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.11,
+        "turkified": 0.001,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.9858,
+        "cer": 0.0027,
+        "repair": 0.0,
+        "turkified": 0.0092
+      },
+      "0.75": {
+        "exact": 0.9792,
+        "cer": 0.0039,
+        "repair": 0.0,
+        "turkified": 0.0108
+      },
+      "0.9": {
+        "exact": 0.9,
+        "cer": 0.0205,
+        "repair": 0.02,
+        "turkified": 0.0083
+      },
+      "0.95": {
+        "exact": 0.8217,
+        "cer": 0.0414,
+        "repair": 0.015,
+        "turkified": 0.0075
+      },
+      "1.0": {
+        "exact": 0.5067,
+        "cer": 0.1171,
+        "repair": 0.025,
+        "turkified": 0.0033
+      }
+    },
+    "n": 6000
+  }
+}

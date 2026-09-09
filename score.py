@@ -76,6 +76,29 @@ def extract(raw: str) -> tuple[str, bool]:
     return raw, True
 
 
+def strip_band(text: str) -> tuple[str, bool]:
+    """Drop the country band from a plate reading.
+
+    A plate carries a blue TR band that is part of the object and not part of
+    the registration. Readers with a text detector find it and return it, which
+    would fail exact match on a plate whose digits were read perfectly. That is
+    worth knowing — it is why `band_read` is a metric — but it is not a reading
+    error, so it is removed before the string is compared.
+
+    Only a standalone TR at either end goes, and never the last two tokens: a
+    plate really can read `34 TR 123`, and a reader that returns nothing but
+    `TR` has failed and must keep failing.
+    """
+    tokens, stripped = text.split(), False
+    while len(tokens) > 2 and tokens[0] == "TR":
+        tokens.pop(0)
+        stripped = True
+    while len(tokens) > 2 and tokens[-1] == "TR":
+        tokens.pop()
+        stripped = True
+    return (" ".join(tokens), stripped) if stripped else (text, False)
+
+
 def edit_distance(a: str, b: str) -> int:
     previous = list(range(len(b) + 1))
     for i, ca in enumerate(a, start=1):
@@ -104,12 +127,16 @@ def classify(record: dict) -> dict:
     """One record in, its failure modes out."""
     truth = record["text"]
     prediction, clean = extract(record["prediction"])
+    band_read = False
+    if record["condition"].startswith("plate"):
+        prediction, band_read = strip_band(prediction)
     exact = prediction == truth
     flags = {
         "exact": exact,
         "cer": cer(truth, prediction),
         "empty": prediction == "",
         "format_ok": clean,
+        "band_read": band_read,
         # A wrong answer that is nevertheless a real word: plausible, so invisible.
         "plausible_error": (not exact and prediction in LEXICON),
         # Same letters, different diacritics. Splitting the direction matters:
@@ -146,8 +173,8 @@ def summarise(records: list[dict]) -> dict:
         pairs = [(r, s) for r, s in zip(records, scored_all) if r["condition"] == condition]
         subset = [s for _, s in pairs]
         entry = {"n": len(subset)}
-        for key in ("exact", "cer", "format_ok", "diacritic_loss", "turkified",
-                    "plausible_error", "empty"):
+        for key in ("exact", "cer", "format_ok", "band_read", "diacritic_loss",
+                    "turkified", "plausible_error", "empty"):
             entry[key] = rate(subset, key)
         if condition == "perturbed":
             entry["repair"] = rate(subset, "repair")
@@ -167,7 +194,8 @@ def summarise(records: list[dict]) -> dict:
         }
 
     overall = {key: rate(scored_all, key) for key in
-               ("exact", "cer", "format_ok", "diacritic_loss", "turkified", "plausible_error")}
+               ("exact", "cer", "format_ok", "band_read", "diacritic_loss",
+                "turkified", "plausible_error")}
     return {"overall": overall, "by_condition": by_condition,
             "by_difficulty": by_difficulty, "n": len(records)}
 
@@ -187,13 +215,14 @@ def main() -> None:
         return name.replace("Qwen2.5-VL-", "").replace("-Instruct", "").replace("qwen-vl:", "qwen ")
 
     print(f"{'reader':<20}{'exact':>8}{'CER':>7}{'format':>8}{'repair':>8}"
-          f"{'plate fix':>10}{'türkçeleş':>11}{'aksan yit':>11}")
-    print("-" * 83)
+          f"{'plate fix':>10}{'band':>7}{'türkçeleş':>11}{'aksan yit':>11}")
+    print("-" * 90)
     for reader, r in report.items():
         o, c = r["overall"], r["by_condition"]
         print(f"{short(reader):<20}{o['exact']:>8.1%}{o['cer']:>7.3f}{o['format_ok']:>8.0%}"
-              f"{c['perturbed'].get('repair', 0):>8.1%}"
-              f"{c['plate_invalid'].get('plate_repair', 0):>10.1%}"
+              f"{c.get('perturbed', {}).get('repair', 0):>8.1%}"
+              f"{c.get('plate_invalid', {}).get('plate_repair', 0):>10.1%}"
+              f"{o['band_read']:>7.1%}"
               f"{o['turkified']:>11.1%}{o['diacritic_loss']:>11.1%}")
 
     print(f"\n{'reader':<20}{'condition':<16}{'exact':>8}{'CER':>7}{'plausible':>11}")

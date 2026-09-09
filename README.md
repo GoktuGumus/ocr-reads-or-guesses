@@ -77,20 +77,21 @@ parsing is an answer that can be parsed wrongly.
 
 ## Results
 
-*Preliminary run: 50 items × 6 conditions × 6 degradation levels = 1,800 images
-per configuration, with plates rendered as bare text. A 200-item run with plates
-drawn as plates is in progress; these numbers will be replaced by it.*
+200 items × 6 conditions × 5 degradation levels = 6,000 images per configuration.
+Six configurations: a CTC baseline, and two model sizes × three prompts.
 
 ![prompt effect](docs/prompt-effect.png)
 
 | reader | exact | CER | format | **repair** | turkified | diacritic loss |
 |---|---|---|---|---|---|---|
-| EasyOCR (CTC) | 69.8% | 0.117 | 100% | **0.0%** | 0.3% | 7.6% |
-| Qwen2.5-VL-3B · strict | **84.4%** | **0.040** | 100% | 0.3% | 0.3% | 5.7% |
-| Qwen2.5-VL-3B · neutral | 78.4% | 0.060 | **58%** | 0.3% | 0.6% | 6.6% |
-| Qwen2.5-VL-3B · primed | 62.6% | 0.195 | 100% | **2.0%** | **1.3%** | 5.4% |
+| EasyOCR (CTC) | 56.7% | 0.153 | 100% | **0.0%** | 1.0% | 13.6% |
+| Qwen2.5-VL-3B · strict | 76.8% | 0.057 | 100% | 0.2% | 0.7% | 10.1% |
+| Qwen2.5-VL-3B · neutral | 71.6% | 0.074 | **59%** | 0.3% | 1.1% | 10.9% |
+| Qwen2.5-VL-3B · primed | 58.9% | 0.186 | 100% | 3.4% | 2.0% | 8.4% |
+| Qwen2.5-VL-7B · strict | **83.9%** | **0.037** | 100% | 1.2% | 0.8% | 6.6% |
+| Qwen2.5-VL-7B · primed | 49.5% | 0.294 | 100% | **7.1%** | **3.2%** | 4.3% |
 
-Three prompts, one model, the same images:
+Three prompts, the same images:
 
 ```
 strict    Transcribe the text exactly as it appears… do not correct spelling.
@@ -98,56 +99,113 @@ neutral   What text is in this image?
 primed    This is a Turkish road sign. Read the Turkish word on it.
 ```
 
-### Repair only happens where the pixels stop deciding
+### Prior-pull scales with the model
 
-| degradation | EasyOCR | strict | neutral | primed |
-|---|---|---|---|---|
-| 0.0 – 0.75 | 0.0% | 0.0% | 0.0% | 0.0% |
-| 0.9 | 0.0% | 0.0% | 0.0% | **4.0%** |
-| 1.0 | 0.0% | 2.0% | 2.0% | **8.0%** |
+Repair rate, by how degraded the image is:
 
-Nothing repairs anything while the text is legible. The prior takes over exactly
-at the point where the evidence runs out — which is the behaviour you would want
-from a Bayesian reasoner and the behaviour you must not have in a labelling
-pipeline, because the pipeline cannot tell the two regimes apart.
+| degradation | EasyOCR | 3B strict | 3B neutral | 3B primed | 7B strict | 7B primed |
+|---|---|---|---|---|---|---|
+| 0.00 | 0.0% | 0.0% | 0.0% | 0.5% | 0.0% | **4.5%** |
+| 0.75 | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | **6.5%** |
+| 0.90 | 0.0% | 0.0% | 0.5% | 3.5% | 2.0% | **8.0%** |
+| 0.95 | 0.0% | 0.0% | 0.0% | 3.0% | 1.5% | **7.0%** |
+| 1.00 | 0.0% | 1.0% | 1.0% | **10.0%** | 2.5% | 9.5% |
 
-### Prior-pull is a setting, not a property
+The bigger model repairs more than the smaller one at every prompt — 1.2% against
+0.2% under the strict prompt, 7.1% against 3.4% under the primed one. Whatever
+makes 7B the better reader is the same thing that makes it the more confident
+rewriter, and it does not show up in any accuracy number.
 
-The same model repairs at 0.3% or 2.0% depending on one sentence of context.
-Priming it with the domain — the thing most people do to *help* — quadrupled the
-repair rate and cost 22 points of exact match.
+### The prior does not wait for the pixels to fail
 
-It also breaks plates:
+A smaller model only overrides a glyph once the glyph stops being legible: 3B's
+repair rate is zero everywhere until 0.90. The 7B model primed with a domain does
+not wait. On **undegraded** images it repairs 4.5% of perturbed words:
 
-| condition | strict | primed |
-|---|---|---|
-| `plate_valid` | 90.0% | **28.3%** |
-| CER | 0.015 | 0.457 |
+```
+shown PAPK      → PARK
+shown ÇIKYŞ     → ÇIKIŞ
+shown GEÇUŞ     → GEÇİŞ
+shown ÇALYŞMA   → ÇALIŞMA
+```
 
-Told it is looking at a Turkish road sign, the model tries to read `34 EYA 382`
-as a word.
+Nothing is blurred in those. The glyphs are 64pt and clean, and the model returns
+a different word. This is the failure that an annotation pipeline cannot see, on
+the images an annotation pipeline would consider easy.
 
-### The CTC baseline never repairs, and never survives
+### Priming does not degrade the task — it replaces it
 
-EasyOCR's repair rate is 0.0% everywhere. It has no lexical prior strong enough
-to override a glyph — which is exactly why it is safe, and why it collapses to
-9.7% exact match at the hardest level where the VLM still manages 38%.
+Told *"this is a Turkish road sign, read the Turkish word on it"*, the 7B model
+scores **0.1%** on plates. Not misread — obeyed:
 
-Robustness to degradation and willingness to hallucinate turn out to be the same
-capability seen from two sides.
+| shown | 7B primed returns |
+|---|---|
+| `01 PEY 114` | `PEY` |
+| `35 MPZ 421` | `MPZ` |
+| `90 ECJ 946` | `ECJ` |
+
+It finds the only word-shaped token on the plate and hands it back. On plates
+drawn with the blue band it returns `TR`. The 3B model does the same thing more
+mildly (34.7%). One sentence of well-meant context turned an OCR engine into a
+word detector, and every output was well-formed.
+
+### The frame helps the model and hurts the pipeline
+
+The plate conditions were run twice: as bare strings, and drawn as plates.
+
+| reader | `plate_valid` bare | drawn | band read as text |
+|---|---|---|---|
+| EasyOCR (CTC) | 71.9% | 67.9% | **19.9%** |
+| 3B strict | 86.7% | **90.7%** | 3.0% |
+| 3B neutral | 74.6% | **84.6%** | 0.1% |
+| 7B strict | 89.8% | **91.1%** | 1.7% |
+
+Drawing the frame helps every VLM — up to 10 points for the neutral prompt — and
+costs the CTC reader, which reads the country band as part of the registration on
+a fifth of all plates (`34 ABC 123 TR`). Those readings are scored after the band
+is removed; the column is what the raw output looked like. If you run a detector
+plus recogniser over plate crops, that is a real 20% contamination rate on a
+string that was otherwise read perfectly.
+
+### The structural prior never fires
+
+The headline conditions of this benchmark, `plate_invalid`, produced almost
+nothing: correcting an invalid province code into a valid one happened at **0.0%
+to 0.9%** in every configuration, both renderings, at every difficulty. The
+lexical prior is strong enough to override clear pixels; the structural one is
+not, or is not represented at all. That is a negative result and it is reported as
+one — a model that knows Turkish words evidently does not, in the same way, know
+Turkish province codes.
+
+### Word errors in Turkish are mostly diacritics
+
+`random` — six letters, no diacritics, no prior whatsoever — is read *better* than
+`word` by every VLM (81.4% against 73.0% for 3B strict). The word conditions are
+not harder because of ambiguity; they are harder because they contain Ş, Ç, Ğ, Ü,
+Ö and İ, and 7–26% of readings drop one. In Turkish that changes the word.
 
 ## What to do with this
 
 For an annotation pipeline that uses a VLM as an OCR engine:
 
 1. **Do not prime the model with domain context.** It is the single most costly
-   thing measured here, in both accuracy and hallucination.
+   thing measured here, in both accuracy and hallucination, and the damage grows
+   with model size: the primed 7B model scored 0.1% on plates and repaired 7.1%
+   of perturbed words.
 2. **Constrain the output format explicitly.** The strict prompt was best on
    every axis, including the ones it was not aimed at.
-3. **Treat degraded crops differently.** Repair rate is zero until legibility
-   fails; a legibility estimate is therefore a usable trigger for human review.
-4. **Consider disagreement as a flag.** A CTC reader and a VLM fail in different
-   directions. Where they disagree is where one of them is guessing.
+3. **Do not assume a bigger model is a safer one.** 7B strict reads better than
+   3B strict by seven points and repairs six times as often. Accuracy and
+   prior-pull rose together, and only one of them was visible in the metrics.
+4. **A legibility estimate is a useful trigger, not a sufficient one.** For the
+   3B model, repair is zero until the text stops being legible. For 7B primed it
+   is 4.5% on clean images. Routing only the blurry crops to review would have
+   caught none of those.
+5. **Consider disagreement as a flag.** A CTC reader and a VLM fail in different
+   directions. Where they disagree is where one of them is guessing — and the
+   CTC reader never repaired once in 36,000 readings.
+6. **Strip the country band before comparing plate strings.** A detector plus
+   recogniser returned it as part of the registration on 19.9% of drawn plates.
 
 ## Running it
 
@@ -160,6 +218,16 @@ python run.py --reader qwen-vl --prompt strict --out predictions/qwen-strict.jso
 python score.py predictions/*.json --json report.json
 python chart.py --report report.json
 python test_stimuli.py                              # the generator's own checks
+```
+
+The plate arm re-runs only the two plate conditions, so it is a third of the
+work and directly comparable to the full run:
+
+```bash
+python stimuli.py --items 200 --out stimuli_plate --conditions plate_valid plate_invalid
+python run.py --reader qwen-vl --stimuli stimuli_plate --prompt strict \
+    --out predictions_plate/qwen-3b-strict.json
+python score.py predictions_plate/*.json --json report_plate.json
 ```
 
 Stimulus generation needs nothing but Pillow and NumPy. Each reader pulls its own
@@ -188,10 +256,15 @@ generator.
 
 It **is not** a claim about VLMs in general: it tests two model sizes from one
 family, at one point in time, on synthetic renderings. Synthetic text is cleaner
-and more uniform than a photograph of a sign, and the effect on real imagery is
-the obvious next thing to measure. Repair rates in the low single digits also
-rest on small cell counts — the direction is consistent across every difficulty
-level, the exact percentages are not precise.
+and more uniform than a photograph of a sign, which is what `sheets.py` and
+`extract.py` exist to fix — printed sheets, photographed at four distances under
+four lighting conditions, with every condition inside the same frame.
+
+Repair rates in the low single digits rest on 200 perturbed items per difficulty
+level. The direction is consistent — across both model sizes, all three prompts
+and every difficulty — but a cell reading 1.5% and one reading 2.0% are not
+distinguishable at this sample size. The differences the results lean on are the
+large ones: 0.2% against 7.1%, 90% against 0.1%.
 
 ## Licence
 

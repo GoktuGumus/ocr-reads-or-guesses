@@ -1,0 +1,422 @@
+{
+  "easyocr": {
+    "family": "ctc",
+    "overall": {
+      "exact": 0.665,
+      "cer": 0.1068,
+      "format_ok": 1.0,
+      "band_read": 0.199,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.651,
+        "cer": 0.1074,
+        "format_ok": 1.0,
+        "band_read": 0.198,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.008,
+        "plate_repair": 0.009
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.679,
+        "cer": 0.1062,
+        "format_ok": 1.0,
+        "band_read": 0.2,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.009
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.995,
+        "cer": 0.0005,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.94,
+        "cer": 0.0073,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.84,
+        "cer": 0.023,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.51,
+        "cer": 0.0796,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.04,
+        "cer": 0.4238,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:neutral": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.8395,
+      "cer": 0.0446,
+      "format_ok": 0.6745,
+      "band_read": 0.0005,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.833,
+        "cer": 0.0482,
+        "format_ok": 0.677,
+        "band_read": 0.001,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.001
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.846,
+        "cer": 0.041,
+        "format_ok": 0.672,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 1.0,
+        "cer": 0.0,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.85,
+        "cer": 0.0622,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.915,
+        "cer": 0.0344,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.905,
+        "cer": 0.0304,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.5275,
+        "cer": 0.096,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.313,
+      "cer": 0.5106,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.276,
+        "cer": 0.5464,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.35,
+        "cer": 0.4748,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.0,
+        "cer": 0.9344,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.27,
+        "cer": 0.5683,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.3975,
+        "cer": 0.4456,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.52,
+        "cer": 0.3312,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.3775,
+        "cer": 0.2735,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.9055,
+      "cer": 0.0151,
+      "format_ok": 1.0,
+      "band_read": 0.0305,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.904,
+        "cer": 0.0169,
+        "format_ok": 1.0,
+        "band_read": 0.042,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.001
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.907,
+        "cer": 0.0132,
+        "format_ok": 1.0,
+        "band_read": 0.019,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 1.0,
+        "cer": 0.0,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.9975,
+        "cer": 0.0008,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.995,
+        "cer": 0.0005,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.9625,
+        "cer": 0.0051,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.5725,
+        "cer": 0.0689,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.0365,
+      "cer": 0.7893,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.003
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.042,
+        "cer": 0.7823,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.002,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.031,
+        "cer": 0.7962,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.004,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 0.0,
+        "cer": 0.9746,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 0.05,
+        "cer": 0.7522,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.025,
+        "cer": 0.7661,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.035,
+        "cer": 0.7487,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.0725,
+        "cer": 0.7046,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.9225,
+      "cer": 0.0142,
+      "format_ok": 1.0,
+      "band_read": 0.0165,
+      "diacritic_loss": 0.0,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "plate_invalid": {
+        "n": 1000,
+        "exact": 0.934,
+        "cer": 0.013,
+        "format_ok": 1.0,
+        "band_read": 0.022,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 1000,
+        "exact": 0.911,
+        "cer": 0.0154,
+        "format_ok": 1.0,
+        "band_read": 0.011,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {
+      "0.0": {
+        "exact": 1.0,
+        "cer": 0.0,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.75": {
+        "exact": 1.0,
+        "cer": 0.0,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.9": {
+        "exact": 0.9975,
+        "cer": 0.0005,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "0.95": {
+        "exact": 0.9775,
+        "cer": 0.0034,
+        "repair": null,
+        "turkified": 0.0
+      },
+      "1.0": {
+        "exact": 0.6375,
+        "cer": 0.0672,
+        "repair": null,
+        "turkified": 0.0
+      }
+    },
+    "n": 2000
+  }
+}
