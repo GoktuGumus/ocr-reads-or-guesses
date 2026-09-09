@@ -1,0 +1,8 @@
+pillow>=10.0
+numpy>=1.24
+
+# Readers, each optional — install what you want to measure:
+#   easyocr>=1.7           CTC baseline
+#   transformers>=4.40     Qwen2.5-VL and other VLMs
+#   qwen-vl-utils          image handling for Qwen
+#   accelerate             device placement
