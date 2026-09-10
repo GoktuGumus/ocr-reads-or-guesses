@@ -208,6 +208,7 @@ so no box is drawn by hand and no expectation about the text can nudge one.
 
 ```bash
 python sheets.py --sheets 4 --out sheets      # writes sheets/sheets.pdf and its manifest
+python simulate_capture.py --sheets sheets/ --out photos_sim/    # dry run, no printer
 lp sheets/sheets.pdf                          # print at 100% scale, no fit-to-page
 # ... photograph the printed sheets into photos/ ...
 python extract.py --photos photos/ --sheets sheets/ --out real/
@@ -222,14 +223,26 @@ footer for that reason. Generation is deterministic: the same `--seed` and
 `--sheets` reproduce the same pages byte for byte.
 
 **Capture protocol** — 4 distances × 4 lighting conditions × 4 sheets = 64 photos,
-768 crops. Name each file `sheet00_3m_daylight.jpg`; the sheet index comes from
+768 crops. Name each file `sheet00_0p8m_daylight.jpg`; the sheet index comes from
 the filename, everything else from the markers.
 
-| | |
-|---|---|
-| distance | 1 m · 2 m · 4 m · 6 m |
-| lighting | daylight · shade · indoor · low light |
-| framing | sheet flat, all four markers in frame, slight angle is fine |
+| distance | sheet in a 3024 px frame | glyph height | note |
+|---|---|---|---|
+| 0.5 m | 959 px | ~36 px | comfortable for any reader |
+| 0.8 m | 599 px | ~22 px | where the CTC reader starts to lose |
+| 1.2 m | 399 px | ~15 px | daylight and shade only |
+| 1.8 m | 266 px | ~10 px | daylight only |
+
+Those numbers are geometry, not guesswork: a 26 mm-equivalent phone lens sees
+1.32 m of width per metre of distance, so an A4 sheet at 4 m is 120 px wide and
+its glyphs are four pixels tall. An earlier draft of this protocol asked for 1, 2,
+4 and 6 m — half of those distances would have produced nothing but unreadable
+crops, and the way that was caught is in the next section.
+
+Lighting: daylight · shade · indoor · low light. Keep the sheet flat with all four
+markers in frame; a slight angle is fine and the homography absorbs it. **Skip low
+light past 1 m** — the markers themselves stop decoding before the text does, and
+the whole photograph is lost rather than just the hard cells.
 
 Difficulty is measured rather than set: each crop carries `x_height_px`, RMS
 `contrast` and Laplacian `sharpness`. Those are proxies, so they get validated
@@ -241,6 +254,71 @@ Print scaling must be 100%: the marker separation is the ruler the extractor
 measures everything else against. And the plate cells are printed plates, not
 photographs of real ones — a real plate is personal data, and more to the point it
 cannot carry an invalid province code, which is the entire condition.
+
+### Validating the capture path before spending 64 photographs
+
+The extraction path — marker detection, homography, cell cutting, legibility
+measurement — is the part of this benchmark most likely to be quietly wrong, and
+after the photographs are taken is an expensive time to find out. So the sheets
+go through a camera model first: `simulate_capture.py` places each page at a
+distance in a 12 MP frame, tilts it, lights it unevenly, blurs it, adds sensor
+noise and JPEG artefacts.
+
+![simulated capture](docs/simulated-capture.png)
+
+**This is not a result on photographs and is not reported as one.** It is honest
+about geometry — a real phone at these distances does produce glyphs of these
+pixel heights — and dishonest about optics, paper, print texture and motion. Its
+job is to break the pipeline before the pipeline costs anything.
+
+It did, twice:
+
+- **The distances in the first draft of the protocol were wrong.** 1, 2, 4 and
+  6 m. At 4 m an A4 sheet is 120 px wide in the frame and its glyphs are four
+  pixels tall. Half the shoot would have produced unreadable crops. The table
+  above is the corrected version.
+- **Markers fail before text does.** Five of 64 frames yielded zero usable
+  crops, and every one of them was low light at 1.2 m or further: the ArUco
+  squares stopped decoding while the words in the same frame were still legible.
+  A lost marker costs the whole photograph, not the hard cells — hence "skip low
+  light past 1 m".
+
+59 of 64 frames extracted, 708 crops, measured x-heights from 4 to 49 px. Running
+the readers over them says the legibility proxy is doing its job — accuracy tracks
+measured glyph height, monotonically, for every reader:
+
+| reader | 0–8px | 8–12px | 12–18px | 18–26px | 26px+ |
+|---|---|---|---|---|---|
+| | *n=20* | *n=43* | *n=225* | *n=186* | *n=234* |
+| EasyOCR (CTC) | 10% | 5% | 22% | 50% | **57%** |
+| 3B strict | 80% | 53% | 69% | 87% | **89%** |
+| 7B strict | 80% | 81% | 80% | 88% | **89%** |
+| 3B primed | 30% | 30% | 57% | 70% | **70%** |
+| 7B primed | 20% | 26% | 50% | 62% | 57% |
+
+The two smallest bands hold 20 and 43 crops and are noise. Across the three that
+matter the axis is clean, which is what the CTC reader was there to establish: it
+has no prior to fall back on, so its accuracy *is* legibility.
+
+And the effect this repository measures survives the trip through a camera model,
+larger than it was on clean renderings:
+
+| reader | exact | CER | **repair** | `plate_valid` |
+|---|---|---|---|---|
+| EasyOCR (CTC) | 39.6% | 0.307 | **0.0%** | 50.0% |
+| 3B strict | 79.7% | 0.079 | **0.0%** | 81.4% |
+| 7B strict | **85.3%** | **0.053** | **0.0%** | **89.8%** |
+| 3B primed | 62.6% | 0.246 | 2.5% | 22.9% |
+| 7B primed | 53.2% | 0.317 | **10.2%** | 3.4% |
+
+Repair by measured glyph height, 7B primed: 2.6% at 26px+, 10.8% at 18–26px,
+16.7% at 12–18px, 20.0% at 8–12px. Under the strict prompt it is 0.0% in every
+band, at both model sizes — the recommendation survives the harder images too.
+
+The one thing that changed direction: perspective and uneven lighting cost the
+CTC reader far more than the VLMs. EasyOCR falls from 56.7% on flat renderings to
+39.6% here; 7B strict goes *up*, 83.9% to 85.3%. A CTC pipeline is safe from
+hallucination and fragile to everything else.
 
 ## What to do with this
 

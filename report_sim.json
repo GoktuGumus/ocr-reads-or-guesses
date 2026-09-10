@@ -1,0 +1,607 @@
+{
+  "easyocr": {
+    "family": "ctc",
+    "overall": {
+      "exact": 0.3955,
+      "cer": 0.307,
+      "format_ok": 1.0,
+      "band_read": 0.0014,
+      "diacritic_loss": 0.0876,
+      "turkified": 0.0254,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 118,
+        "exact": 0.4322,
+        "cer": 0.2722,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.2034,
+        "turkified": 0.0339,
+        "plausible_error": 0.0,
+        "empty": 0.0339,
+        "repair": 0.0
+      },
+      "plate_invalid": {
+        "n": 118,
+        "exact": 0.4407,
+        "cer": 0.2941,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0678,
+        "plate_repair": 0.0254
+      },
+      "plate_valid": {
+        "n": 118,
+        "exact": 0.5,
+        "cer": 0.3078,
+        "format_ok": 1.0,
+        "band_read": 0.0085,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.1186
+      },
+      "pseudo": {
+        "n": 118,
+        "exact": 0.3051,
+        "cer": 0.3531,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.1949,
+        "turkified": 0.0847,
+        "plausible_error": 0.0,
+        "empty": 0.0508
+      },
+      "random": {
+        "n": 118,
+        "exact": 0.2627,
+        "cer": 0.3206,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0508
+      },
+      "word": {
+        "n": 118,
+        "exact": 0.4322,
+        "cer": 0.2942,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.1271,
+        "turkified": 0.0339,
+        "plausible_error": 0.0,
+        "empty": 0.0508
+      }
+    },
+    "by_difficulty": {},
+    "by_legibility": {
+      "0-8px": {
+        "n": 20,
+        "exact": 0.1,
+        "cer": 0.6499,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "8-12px": {
+        "n": 43,
+        "exact": 0.0465,
+        "cer": 0.6713,
+        "repair": 0.0,
+        "turkified": 0.0233
+      },
+      "12-18px": {
+        "n": 225,
+        "exact": 0.2178,
+        "cer": 0.3904,
+        "repair": 0.0,
+        "turkified": 0.0489
+      },
+      "18-26px": {
+        "n": 186,
+        "exact": 0.5,
+        "cer": 0.196,
+        "repair": 0.0,
+        "turkified": 0.0269
+      },
+      "26px+": {
+        "n": 234,
+        "exact": 0.5726,
+        "cer": 0.2188,
+        "repair": 0.0,
+        "turkified": 0.0043
+      }
+    },
+    "n": 708
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.6257,
+      "cer": 0.2461,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.024,
+      "turkified": 0.0099,
+      "plausible_error": 0.0085
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 118,
+        "exact": 0.839,
+        "cer": 0.0694,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0169,
+        "turkified": 0.0,
+        "plausible_error": 0.0424,
+        "empty": 0.0,
+        "repair": 0.0254
+      },
+      "plate_invalid": {
+        "n": 118,
+        "exact": 0.3051,
+        "cer": 0.5041,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0085
+      },
+      "plate_valid": {
+        "n": 118,
+        "exact": 0.2288,
+        "cer": 0.5772,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0085,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 118,
+        "exact": 0.661,
+        "cer": 0.1384,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.1017,
+        "turkified": 0.0593,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 118,
+        "exact": 0.7966,
+        "cer": 0.1427,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 118,
+        "exact": 0.9237,
+        "cer": 0.0448,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0254,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {},
+    "by_legibility": {
+      "0-8px": {
+        "n": 20,
+        "exact": 0.3,
+        "cer": 0.5538,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "8-12px": {
+        "n": 43,
+        "exact": 0.3023,
+        "cer": 0.3582,
+        "repair": 0.2,
+        "turkified": 0.0
+      },
+      "12-18px": {
+        "n": 225,
+        "exact": 0.5733,
+        "cer": 0.2332,
+        "repair": 0.0556,
+        "turkified": 0.0133
+      },
+      "18-26px": {
+        "n": 186,
+        "exact": 0.7043,
+        "cer": 0.2319,
+        "repair": 0.0,
+        "turkified": 0.0054
+      },
+      "26px+": {
+        "n": 234,
+        "exact": 0.7009,
+        "cer": 0.2228,
+        "repair": 0.0,
+        "turkified": 0.0128
+      }
+    },
+    "n": 708
+  },
+  "qwen-vl:Qwen2.5-VL-3B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.7966,
+      "cer": 0.0792,
+      "format_ok": 0.9986,
+      "band_read": 0.0,
+      "diacritic_loss": 0.041,
+      "turkified": 0.0,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 118,
+        "exact": 0.8136,
+        "cer": 0.0713,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0678,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "repair": 0.0
+      },
+      "plate_invalid": {
+        "n": 118,
+        "exact": 0.8051,
+        "cer": 0.0628,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0169
+      },
+      "plate_valid": {
+        "n": 118,
+        "exact": 0.8136,
+        "cer": 0.0689,
+        "format_ok": 0.9915,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0085
+      },
+      "pseudo": {
+        "n": 118,
+        "exact": 0.661,
+        "cer": 0.1158,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.1356,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 118,
+        "exact": 0.8051,
+        "cer": 0.1031,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0085
+      },
+      "word": {
+        "n": 118,
+        "exact": 0.8814,
+        "cer": 0.0531,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0424,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0085
+      }
+    },
+    "by_difficulty": {},
+    "by_legibility": {
+      "0-8px": {
+        "n": 20,
+        "exact": 0.8,
+        "cer": 0.1529,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "8-12px": {
+        "n": 43,
+        "exact": 0.5349,
+        "cer": 0.1211,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "12-18px": {
+        "n": 225,
+        "exact": 0.6933,
+        "cer": 0.1054,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "18-26px": {
+        "n": 186,
+        "exact": 0.8656,
+        "cer": 0.0779,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "26px+": {
+        "n": 234,
+        "exact": 0.8889,
+        "cer": 0.041,
+        "repair": 0.0,
+        "turkified": 0.0
+      }
+    },
+    "n": 708
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:primed": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.5325,
+      "cer": 0.3166,
+      "format_ok": 1.0,
+      "band_read": 0.0,
+      "diacritic_loss": 0.0141,
+      "turkified": 0.0508,
+      "plausible_error": 0.0198
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 118,
+        "exact": 0.822,
+        "cer": 0.0666,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0169,
+        "turkified": 0.0,
+        "plausible_error": 0.1017,
+        "empty": 0.0,
+        "repair": 0.1017
+      },
+      "plate_invalid": {
+        "n": 118,
+        "exact": 0.0508,
+        "cer": 0.7729,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0085,
+        "empty": 0.0,
+        "plate_repair": 0.0
+      },
+      "plate_valid": {
+        "n": 118,
+        "exact": 0.0339,
+        "cer": 0.8009,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 118,
+        "exact": 0.5932,
+        "cer": 0.1356,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0424,
+        "turkified": 0.2627,
+        "plausible_error": 0.0085,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 118,
+        "exact": 0.7627,
+        "cer": 0.0918,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0424,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 118,
+        "exact": 0.9322,
+        "cer": 0.0319,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0254,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {},
+    "by_legibility": {
+      "0-8px": {
+        "n": 20,
+        "exact": 0.2,
+        "cer": 0.5849,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "8-12px": {
+        "n": 43,
+        "exact": 0.2558,
+        "cer": 0.5204,
+        "repair": 0.2,
+        "turkified": 0.0233
+      },
+      "12-18px": {
+        "n": 225,
+        "exact": 0.4978,
+        "cer": 0.303,
+        "repair": 0.1667,
+        "turkified": 0.0489
+      },
+      "18-26px": {
+        "n": 186,
+        "exact": 0.6237,
+        "cer": 0.2678,
+        "repair": 0.1081,
+        "turkified": 0.0376
+      },
+      "26px+": {
+        "n": 234,
+        "exact": 0.5726,
+        "cer": 0.3081,
+        "repair": 0.0256,
+        "turkified": 0.0726
+      }
+    },
+    "n": 708
+  },
+  "qwen-vl:Qwen2.5-VL-7B-Instruct:strict": {
+    "family": "vlm",
+    "overall": {
+      "exact": 0.8531,
+      "cer": 0.0527,
+      "format_ok": 1.0,
+      "band_read": 0.0099,
+      "diacritic_loss": 0.0297,
+      "turkified": 0.0141,
+      "plausible_error": 0.0
+    },
+    "by_condition": {
+      "perturbed": {
+        "n": 118,
+        "exact": 0.8644,
+        "cer": 0.0486,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0593,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "repair": 0.0
+      },
+      "plate_invalid": {
+        "n": 118,
+        "exact": 0.8729,
+        "cer": 0.0523,
+        "format_ok": 1.0,
+        "band_read": 0.0424,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0,
+        "plate_repair": 0.0085
+      },
+      "plate_valid": {
+        "n": 118,
+        "exact": 0.8983,
+        "cer": 0.0377,
+        "format_ok": 1.0,
+        "band_read": 0.0169,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "pseudo": {
+        "n": 118,
+        "exact": 0.6949,
+        "cer": 0.0946,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.1017,
+        "turkified": 0.0678,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "random": {
+        "n": 118,
+        "exact": 0.8644,
+        "cer": 0.0579,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0,
+        "turkified": 0.0,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      },
+      "word": {
+        "n": 118,
+        "exact": 0.9237,
+        "cer": 0.0251,
+        "format_ok": 1.0,
+        "band_read": 0.0,
+        "diacritic_loss": 0.0169,
+        "turkified": 0.0169,
+        "plausible_error": 0.0,
+        "empty": 0.0
+      }
+    },
+    "by_difficulty": {},
+    "by_legibility": {
+      "0-8px": {
+        "n": 20,
+        "exact": 0.8,
+        "cer": 0.1275,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "8-12px": {
+        "n": 43,
+        "exact": 0.814,
+        "cer": 0.0718,
+        "repair": 0.0,
+        "turkified": 0.0
+      },
+      "12-18px": {
+        "n": 225,
+        "exact": 0.8,
+        "cer": 0.0555,
+        "repair": 0.0,
+        "turkified": 0.0178
+      },
+      "18-26px": {
+        "n": 186,
+        "exact": 0.8817,
+        "cer": 0.059,
+        "repair": 0.0,
+        "turkified": 0.0054
+      },
+      "26px+": {
+        "n": 234,
+        "exact": 0.8932,
+        "cer": 0.0352,
+        "repair": 0.0,
+        "turkified": 0.0214
+      }
+    },
+    "n": 708
+  }
+}

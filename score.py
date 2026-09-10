@@ -182,22 +182,46 @@ def summarise(records: list[dict]) -> dict:
             entry["plate_repair"] = rate(subset, "plate_repair")
         by_condition[condition] = entry
 
-    by_difficulty = {}
-    for difficulty in sorted({r["difficulty"] for r in records}):
-        pairs = [(r, s) for r, s in zip(records, scored_all) if r["difficulty"] == difficulty]
-        subset = [s for _, s in pairs]
-        perturbed = [s for r, s in pairs if r["condition"] == "perturbed"]
-        by_difficulty[str(difficulty)] = {
-            "exact": rate(subset, "exact"), "cer": rate(subset, "cer"),
+    def band(records_subset, scored_subset, label):
+        perturbed = [s for r, s in zip(records_subset, scored_subset)
+                     if r["condition"] == "perturbed"]
+        return label, {
+            "n": len(scored_subset),
+            "exact": rate(scored_subset, "exact"), "cer": rate(scored_subset, "cer"),
             "repair": rate(perturbed, "repair") if perturbed else None,
-            "turkified": rate(subset, "turkified"),
+            "turkified": rate(scored_subset, "turkified"),
         }
+
+    # Synthetic stimuli carry the difficulty they were rendered at. Crops cut out
+    # of a photograph do not — difficulty was a property of the shot, not a knob —
+    # so they are grouped by measured glyph height instead. Both are the same
+    # axis: how many pixels the reader was given per character.
+    by_difficulty = {}
+    if all("difficulty" in r for r in records):
+        for difficulty in sorted({r["difficulty"] for r in records}):
+            pairs = [(r, s) for r, s in zip(records, scored_all)
+                     if r["difficulty"] == difficulty]
+            key, entry = band([r for r, _ in pairs], [s for _, s in pairs], str(difficulty))
+            by_difficulty[key] = entry
+
+    by_legibility = {}
+    if any("x_height_px" in r for r in records):
+        edges = [(0, 8), (8, 12), (12, 18), (18, 26), (26, 10_000)]
+        for low, high in edges:
+            pairs = [(r, s) for r, s in zip(records, scored_all)
+                     if low <= r.get("x_height_px", -1) < high]
+            if not pairs:
+                continue
+            label = f"{low}-{high}px" if high < 10_000 else f"{low}px+"
+            key, entry = band([r for r, _ in pairs], [s for _, s in pairs], label)
+            by_legibility[key] = entry
 
     overall = {key: rate(scored_all, key) for key in
                ("exact", "cer", "format_ok", "band_read", "diacritic_loss",
                 "turkified", "plausible_error")}
     return {"overall": overall, "by_condition": by_condition,
-            "by_difficulty": by_difficulty, "n": len(records)}
+            "by_difficulty": by_difficulty, "by_legibility": by_legibility,
+            "n": len(records)}
 
 
 def main() -> None:
@@ -232,13 +256,16 @@ def main() -> None:
             print(f"{short(reader):<20}{condition:<16}{c['exact']:>8.1%}{c['cer']:>7.3f}"
                   f"{c['plausible_error']:>11.1%}")
 
-    print(f"\n{'reader':<20}{'difficulty':<12}{'exact':>8}{'repair':>9}{'türkçeleş':>11}")
-    print("-" * 60)
-    for reader, r in report.items():
-        for difficulty, d in r["by_difficulty"].items():
-            repair = f"{d['repair']:.1%}" if d["repair"] is not None else "-"
-            print(f"{short(reader):<20}{difficulty:<12}{d['exact']:>8.1%}{repair:>9}"
-                  f"{d['turkified']:>11.1%}")
+    for title, field in (("difficulty", "by_difficulty"), ("x-height", "by_legibility")):
+        if not any(r[field] for r in report.values()):
+            continue
+        print(f"\n{'reader':<20}{title:<12}{'n':>6}{'exact':>8}{'repair':>9}{'türkçeleş':>11}")
+        print("-" * 66)
+        for reader, r in report.items():
+            for level, d in r[field].items():
+                repair = f"{d['repair']:.1%}" if d["repair"] is not None else "-"
+                print(f"{short(reader):<20}{level:<12}{d['n']:>6}{d['exact']:>8.1%}"
+                      f"{repair:>9}{d['turkified']:>11.1%}")
 
     if args.json:
         pathlib.Path(args.json).write_text(json.dumps(report, indent=2, ensure_ascii=False))
