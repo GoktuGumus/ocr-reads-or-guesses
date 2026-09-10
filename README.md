@@ -207,10 +207,19 @@ annotation job. `extract.py` finds them, rectifies the sheet to the geometry
 so no box is drawn by hand and no expectation about the text can nudge one.
 
 ```bash
-python sheets.py --sheets 4 --out sheets      # print at 100% scale on A4, no fit-to-page
+python sheets.py --sheets 4 --out sheets      # writes sheets/sheets.pdf and its manifest
+lp sheets/sheets.pdf                          # print at 100% scale, no fit-to-page
+# ... photograph the printed sheets into photos/ ...
 python extract.py --photos photos/ --sheets sheets/ --out real/
 python run.py --reader qwen-vl --stimuli real --prompt strict --out predictions_real/qwen.json
 ```
+
+Print **`sheets/sheets.pdf`**, the copy that sits next to the manifest that made
+it — not `docs/sheets.pdf`, which is only a preview. The manifest is what turns a
+photograph into labels, so a page printed from one seed and extracted with another
+would mislabel every crop and raise nothing. Each page carries its seed in the
+footer for that reason. Generation is deterministic: the same `--seed` and
+`--sheets` reproduce the same pages byte for byte.
 
 **Capture protocol** — 4 distances × 4 lighting conditions × 4 sheets = 64 photos,
 768 crops. Name each file `sheet00_3m_daylight.jpg`; the sheet index comes from

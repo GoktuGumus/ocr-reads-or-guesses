@@ -79,7 +79,8 @@ def cell_boxes() -> list[tuple[int, int, int, int]]:
             for row in range(ROWS) for column in range(COLUMNS)]
 
 
-def build_sheet(index: int, rng: random.Random, font_path: str) -> tuple[Image.Image, dict]:
+def build_sheet(index: int, rng: random.Random, font_path: str,
+                seed: int) -> tuple[Image.Image, dict]:
     words = rng.sample(WORDS, COLUMNS)
     variants: list[tuple[str, str, str | None]] = []
     for word in words:
@@ -120,9 +121,12 @@ def build_sheet(index: int, rng: random.Random, font_path: str) -> tuple[Image.I
         cells.append({"condition": condition, "text": text, "source_word": source,
                       "x": x, "y": y, "w": width, "h": height})
 
+    # The seed goes on the page because the manifest is what turns a photograph
+    # into labels: print one PDF and extract with a manifest built from another
+    # seed, and every crop is confidently mislabelled with no error anywhere.
     draw.text((MARGIN + MARKER_PX + 12, PAGE[1] - MARGIN - int(0.22 * DPI)),
-              f"sheet {index:02d} · print at 100% · A4", font=ImageFont.truetype(font_path, 18),
-              fill=(150, 150, 150))
+              f"sheet {index:02d} · seed {seed} · print at 100% · A4",
+              font=ImageFont.truetype(font_path, 18), fill=(150, 150, 150))
 
     return canvas, {"sheet": index, "page_px": PAGE, "dpi": DPI,
                     "markers": placed, "cells": cells}
@@ -143,7 +147,7 @@ def main() -> None:
     manifest = {"dpi": DPI, "page_px": PAGE, "seed": args.seed, "sheets": []}
     pages = []
     for index in range(args.sheets):
-        canvas, record = build_sheet(index, rng, font_path)
+        canvas, record = build_sheet(index, rng, font_path, args.seed)
         canvas.save(out / f"sheet_{index:02d}.png")
         pages.append(canvas)
         manifest["sheets"].append(record)
