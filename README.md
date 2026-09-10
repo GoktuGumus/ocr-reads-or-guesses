@@ -184,6 +184,55 @@ Turkish province codes.
 not harder because of ambiguity; they are harder because they contain Ş, Ç, Ğ, Ü,
 Ö and İ, and 7–26% of readings drop one. In Turkish that changes the word.
 
+## The real-image half
+
+Synthetic renderings are cleaner and more uniform than a photograph, so the same
+measurement runs on printed sheets. **[docs/sheets.pdf](docs/sheets.pdf)** is the
+printable stimulus — four A4 pages, twelve cells each, two items across all six
+conditions:
+
+![sheet](docs/sheet-example.png)
+
+A photograph cannot be counterfactual on its own: there is no picture of a sign
+that says `KAVBAK`, and editing one into a real photo replaces the thing being
+controlled. So the matching moves into the capture. Every condition is printed on
+the same sheet and photographed in one frame, which makes illumination, focus,
+motion blur, exposure, white balance and sensor noise identical across conditions
+*by construction* — they are the same photograph. Distance and lighting become the
+difficulty ladder and vary between photographs rather than within them.
+
+The four ArUco markers turn crop extraction into a homography rather than an
+annotation job. `extract.py` finds them, rectifies the sheet to the geometry
+`sheets.py` recorded, and cuts each cell at coordinates fixed before the shutter —
+so no box is drawn by hand and no expectation about the text can nudge one.
+
+```bash
+python sheets.py --sheets 4 --out sheets      # print at 100% scale on A4, no fit-to-page
+python extract.py --photos photos/ --sheets sheets/ --out real/
+python run.py --reader qwen-vl --stimuli real --prompt strict --out predictions_real/qwen.json
+```
+
+**Capture protocol** — 4 distances × 4 lighting conditions × 4 sheets = 64 photos,
+768 crops. Name each file `sheet00_3m_daylight.jpg`; the sheet index comes from
+the filename, everything else from the markers.
+
+| | |
+|---|---|
+| distance | 1 m · 2 m · 4 m · 6 m |
+| lighting | daylight · shade · indoor · low light |
+| framing | sheet flat, all four markers in frame, slight angle is fine |
+
+Difficulty is measured rather than set: each crop carries `x_height_px`, RMS
+`contrast` and Laplacian `sharpness`. Those are proxies, so they get validated
+against the CTC reader — it never repairs, so its accuracy is legibility
+uncontaminated by priors. If accuracy falls as the proxies say difficulty rises,
+the axis is real and the VLM's repair rate can be read against it.
+
+Print scaling must be 100%: the marker separation is the ruler the extractor
+measures everything else against. And the plate cells are printed plates, not
+photographs of real ones — a real plate is personal data, and more to the point it
+cannot carry an invalid province code, which is the entire condition.
+
 ## What to do with this
 
 For an annotation pipeline that uses a VLM as an OCR engine:
