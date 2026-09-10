@@ -122,8 +122,19 @@ def main() -> None:
     (out / "images").mkdir(parents=True, exist_ok=True)
 
     stimuli, skipped = [], []
-    photos = sorted(p for p in pathlib.Path(args.photos).iterdir()
-                    if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".heic"})
+    folder = pathlib.Path(args.photos)
+    if not folder.is_dir():
+        raise SystemExit(f"{folder}/ does not exist. Print sheets/sheets.pdf, photograph "
+                         f"the pages, and put the shots in {folder}/ named like "
+                         f"sheet00_2m_daylight.jpg — the sheet index comes from the filename.")
+    # No HEIC: OpenCV cannot decode it, and silently skipping an iPhone's entire
+    # camera roll as "unreadable" is a worse outcome than saying so up front.
+    photos = sorted(p for p in folder.iterdir()
+                    if p.suffix.lower() in {".jpg", ".jpeg", ".png"})
+    if not photos:
+        raise SystemExit(f"no .jpg/.jpeg/.png files in {folder}/. HEIC from an iPhone "
+                         f"needs converting first: heif-convert shot.HEIC "
+                         f"sheet00_2m_daylight.jpg")
 
     for photo_path in photos:
         photo = cv2.imread(str(photo_path))
