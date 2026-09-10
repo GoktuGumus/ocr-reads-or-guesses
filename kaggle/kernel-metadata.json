@@ -1,0 +1,13 @@
+{
+  "id": "gktugm/reads-or-guesses-ocr-prior-pull",
+  "title": "Reads or Guesses: OCR prior-pull",
+  "code_file": "reads-or-guesses.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": "false",
+  "enable_gpu": "false",
+  "enable_internet": "true",
+  "dataset_sources": ["gktugm/ocr-reads-or-guesses"],
+  "competition_sources": [],
+  "kernel_sources": []
+}
