@@ -49,9 +49,20 @@ sys.path.insert(0, "ocr-reads-or-guesses")
 
 from score import summarise
 
-DATA = pathlib.Path("{DATA}")
 ARMS = {{"synthetic": "predictions", "drawn plates": "predictions_plate",
         "camera model": "predictions_sim"}}
+
+# Find the attached dataset rather than assuming where it mounts: Kaggle nests
+# the input tree, and a hard-coded path that is one segment off fails as an empty
+# result rather than an error — which looks exactly like a run that worked.
+INPUT = pathlib.Path("/kaggle/input")
+found = sorted(p.parent for p in INPUT.rglob("predictions") if p.is_dir()) if INPUT.is_dir() else []
+DATA = found[0] if found else pathlib.Path("{DATA}")
+if not (DATA / "predictions").is_dir():
+    seen = sorted(str(p.relative_to(INPUT)) for p in INPUT.rglob("*") if p.is_dir())[:20]
+    raise SystemExit(f"no predictions/ anywhere under {{INPUT}}. Saw: {{seen or 'nothing'}}"
+                     f" — attach kaggle.com/datasets/gktugm/ocr-reads-or-guesses.")
+print(f"data: {{DATA}}")
 
 reports = {{}}
 for arm, folder in ARMS.items():

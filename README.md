@@ -370,6 +370,13 @@ python score.py predictions_plate/*.json --json report_plate.json
 OpenCV for the markers. Each reader pulls its own dependencies only when used, so
 measuring with EasyOCR does not mean installing `transformers`.
 
+## Elsewhere
+
+The raw readings — all 51,540 of them — are on Kaggle as
+[gktugm/ocr-reads-or-guesses](https://www.kaggle.com/datasets/gktugm/ocr-reads-or-guesses),
+with a [notebook](https://www.kaggle.com/code/gktugm/reads-or-guesses-ocr-prior-pull)
+that rebuilds every table and chart here from them on CPU in about a minute.
+
 ## Prior work
 
 The counterfactual-perturbation method is not new. [Do VLMs Read or
