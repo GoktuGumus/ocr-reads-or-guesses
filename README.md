@@ -366,8 +366,9 @@ python run.py --reader qwen-vl --stimuli stimuli_plate --prompt strict \
 python score.py predictions_plate/*.json --json report_plate.json
 ```
 
-Stimulus generation needs nothing but Pillow and NumPy. Each reader pulls its own
-dependencies only when used.
+`stimuli.py` needs nothing but Pillow and NumPy; the printed-sheet path adds
+OpenCV for the markers. Each reader pulls its own dependencies only when used, so
+measuring with EasyOCR does not mean installing `transformers`.
 
 ## Prior work
 
@@ -391,16 +392,22 @@ It **is** a controlled measurement with matched stimuli and a reproducible
 generator.
 
 It **is not** a claim about VLMs in general: it tests two model sizes from one
-family, at one point in time, on synthetic renderings. Synthetic text is cleaner
-and more uniform than a photograph of a sign, which is what `sheets.py` and
-`extract.py` exist to fix — printed sheets, photographed at four distances under
-four lighting conditions, with every condition inside the same frame.
+family, at one point in time. Everything measured so far is rendered or simulated
+— clean stimuli, and sheets put through a camera model. Real photographs of the
+printed sheets are the remaining step, and `sheets.py` / `extract.py` are the
+whole of what it takes: print, shoot, extract, run.
 
 Repair rates in the low single digits rest on 200 perturbed items per difficulty
-level. The direction is consistent — across both model sizes, all three prompts
-and every difficulty — but a cell reading 1.5% and one reading 2.0% are not
-distinguishable at this sample size. The differences the results lean on are the
-large ones: 0.2% against 7.1%, 90% against 0.1%.
+level, and the legibility bands below 12 px on 20 to 43 crops. The direction is
+consistent — across both model sizes, all three prompts, every difficulty and both
+renderings — but a cell reading 1.5% and one reading 2.0% are not distinguishable
+at this sample size. The differences the results lean on are the large ones: 0.0%
+against 10.2%, 90% against 0.1%.
+
+Two of the six conditions produced almost nothing, and that is stated where it
+happens rather than left out: `plate_invalid` never triggered a structural repair
+worth reporting, and `random` turned out to measure the absence of diacritics as
+much as the absence of a prior.
 
 ## Licence
 

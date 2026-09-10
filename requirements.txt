@@ -1,5 +1,13 @@
+# Stimulus generation and scoring.
 pillow>=10.0
 numpy>=1.24
+
+# Printed sheets, capture simulation and crop extraction. ArUco moved into the
+# main package at 4.7; before that it lived in opencv-contrib-python.
+opencv-python>=4.7
+
+# Charts.
+matplotlib>=3.7
 
 # Readers, each optional — install what you want to measure:
 #   easyocr>=1.7           CTC baseline
